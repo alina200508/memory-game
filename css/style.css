@@ -20,22 +20,28 @@ html {
     }
 }
 
-@media (min-width: 1440px) {
-    html {
-        font-size: 20px;
-    }
-}
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px 16px;
-    background-color: #ffced9;
+    background-color: #F5E6D3;
     height: 60px;
     border-bottom: 1.5px solid #A09D9e;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
 }
+
+@media (min-width: 1440px) {
+    html {
+        font-size: 20px;
+    }
+
+    header {
+        padding: 10px 16px;
+    }
+}
+
 
 .label_box {
     display: flex;
@@ -78,6 +84,18 @@ main {
     background-color: #ffced9;
     padding: 16px;
     min-height: calc(100vh - 60px);
+}
+
+.main_wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    background-color: #F5E6D3;
+    border: 1px solid #A09D9e;
+    border-radius: 11px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
 }
 
 .values {
@@ -156,7 +174,7 @@ dialog.modal {
     padding: 20px;
     margin: auto;
     width: min(90vw, 360px);
-    background: #ffced9;
+    background: #F5E6D3;
     border: 2px solid #A09D9e;
     border-radius: 12px;
 }
@@ -193,13 +211,14 @@ dialog.modal .btn {
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
+    background-color: #F5E6D3;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
     transition: background .2s ease, color .2s ease, transform .1s ease;
 }
 
 dialog.modal .btn:hover {
     background: #505050;
-    color: #fff;
+    color: #F5E6D3;
 }
 
 .leaders_body {

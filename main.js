@@ -347,6 +347,7 @@ function showWinModal (moves) {
     p.textContent = `You did it in ${moves} moves.`;
 
     const btn = document.createElement('button');
+    btn. className = 'btn';
     btn.type = 'btn';
     btn.textContent = 'New game';
     btn.addEventListener('click', () => {
@@ -391,7 +392,9 @@ function renderBoard () {
 
 renderBoard();
 
-main.append(values_wrapper, board_wrapper);
+main_wrapper.append(values_wrapper, board_wrapper);
+
+main.append(main_wrapper);
 
 document.body.prepend(header, main);
 
