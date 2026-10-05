@@ -9,11 +9,17 @@
 ##How to play:
 
 1.Click **New game** to start new game.
+
 2.  Click on cards to flip them - two at a time.
+
 3. If the images match, the cards stay open.
+
 4. If they don't match, the cards flip back after 0.8s.
+
 5. The goal is to find all 8 pairs in as few moves as possible.
+
 6. After you win, your results is automatically saved to the leaderboard.
+
 7. Click ** Table leaders** to view the best results.
 
 ---
