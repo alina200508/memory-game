@@ -8,9 +8,10 @@
 
 ##How to play:
 
-1.Click **New game** to start new game.
 
-2.  Click on cards to flip them - two at a time.
+1. Click **New game** to start new game.
+
+2. Click on cards to flip them - two at a time.
 
 3. If the images match, the cards stay open.
 
