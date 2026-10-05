@@ -2,7 +2,7 @@
 
 **Demo:** [alina200508.github.io/memory-game](https://alina200508.github.io/memory-game/)
 
-![Screenshot](<img width="950" height="443" alt="Снимок экрана 2026-10-06 002231" src="https://github.com/user-attachments/assets/0d6a527e-dacc-4575-9591-0e4f9184e510" />)
+![Screenshot](images/screenshot.png)
 
 ---
 
