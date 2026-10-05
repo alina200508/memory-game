@@ -1,4 +1,4 @@
-#Memory Game
+# Memory Game
 
 **Demo:** [alina200508.github.io/memory-game](https://alina200508.github.io/memory-game/)
 
@@ -6,7 +6,7 @@
 
 ---
 
-##How to play:
+## How to play:
 
 
 1. Click **New game** to start new game.
