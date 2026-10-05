@@ -1,10 +1,251 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 10px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 1440px) {
+    html {
+        font-size: 20px;
+    }
+}
+
 header {
-    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 16px;
+    background-color: #ffced9;
+    height: 60px;
+    border-bottom: 1.5px solid #A09D9e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+}
+
+.label_box {
+    display: flex;
+    justify-content: center;
+}
+
+.label {
+    font-size: 2rem;
+    color: #505050;
+}
+
+.header_buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.btn {
+    background-color: #ffced9;
+    border: 1px solid #505050;
+    color: #505050;
+    font-size: 1.2rem;
+    border-radius: 0.4em;
+    padding: 0.5em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+}
+
+.btn:hover {
+    color: #fff;
+    background-color: #505050;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, transform .1s ease;
+
 }
 
 main {
-    background-color: blueviolet;
-    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffced9;
+    padding: 16px;
+    min-height: calc(100vh - 60px);
+}
+
+.values {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 480px;
+    padding: 12px;
+}
+
+.moves,
+.pairs {
+    font-size: 1.5rem;
+    color: #505050;
+}
+
+.board_wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.card {
+    aspect-ratio: 1 / 1;
+    perspective: 600px;
+    cursor: pointer;
+    width: 100%;
+    
+}
+
+.card_inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .4s;
+}
+
+.card.is-flipped .card_inner,
+.card.is-matched .card_inner {
+    transform: rotateY(180deg);
+}
+
+.card_back,
+.card_front {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border: 1px solid #A09D9e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+}
+
+.card_back {
+    background: #ffced9;
+}
+
+.card_front {
+    transform: rotateY(180deg);
+}
+
+.card_front img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+dialog.modal {
+    border: none;
+    padding: 20px;
+    margin: auto;
+    width: min(90vw, 360px);
+    background: #ffced9;
+    border: 2px solid #A09D9e;
+    border-radius: 12px;
+}
+
+dialog.modal::backdrop {
+    background: rgba(160, 157, 158, .4);
+    backdrop-filter: blur(2px);
+}
+
+dialog.modal h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #505050;
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #A09D9e;
+}
+
+dialog.modal p {
+    font-size: 0.9rem;
+    color: #505050;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+dialog.modal .btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+    transition: background .2s ease, color .2s ease, transform .1s ease;
+}
+
+dialog.modal .btn:hover {
+    background: #505050;
+    color: #fff;
+}
+
+.leaders_body {
+    max-height: 50vh;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.leaders_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    color: #505050;
+}
+
+.leaders_table th,
+.leaders_table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #A09D9e;
+}
+
+.leaders_table th {
+    font-weight: 600;
+    border-bottom: 1px solid #A09D9e;
+    position: stiky;
+    top: 0;
+    text-align: center;
+}
+
+.leaders_table td:first-child,
+.leaders_table th:first-child {
+  
+  text-align: center;
+}
+
+.leaders_table tr:last-child td {
+  border-bottom: none;
+}
+
+.leaders_empty {
+  text-align: center;
+  color: #A09D9e;
+  padding: 24px 0;
+  font-size: 0.9rem;
+  font-style: italic;
 }
 
 body.modal-open {

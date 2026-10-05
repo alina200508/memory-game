@@ -8,84 +8,6 @@
 // 8. Сборка DOM (document.body.prepend(header, main))
 // 9. Первый запуск (newGame())
 
-const state = {
-    firstCard: null,
-    secondCard: null,
-    lockBoard: false,
-    moves: 0,
-    matchedPairs: 0,
-    totalPairs: 8
-};
-
-const header = document.createElement('header');
-
-const label_box = document.createElement('div');
-
-const label = document.createElement('p');
-label.className = 'label';
-label.textContent = 'Memory Game';
-
-function createButton ({text, className, onClick}) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = className;
-    btn.textContent = text;
-    btn.addEventListener('click', onClick);
-    return btn;
-}
-
-const modal_leaders = document.createElement('dialog');
-modal_leaders.addEventListener('close', () => {
-  document.body.classList.remove('modal-open');
-});
-
-const modal_title = document.createElement('h2');
-modal_title.textContent = 'List of best results';
-
-
-
-const close_modal_btn = document.createElement('button');
-close_modal_btn.type = 'button';
-close_modal_btn.textContent = 'Close';
-close_modal_btn.addEventListener ('click', () => {
-    if (modal_leaders.open) modal_leaders.close()})
-
-modal_leaders.append(modal_title, close_modal_btn);
-
-label_box.append(label);
-
-header.append (
-    label_box,
-    modal_leaders,
-    createButton({
-        text: 'New game',
-        className: 'btn_new_game',
-        onClick: newGame
-    }),
-    createButton({
-        text: 'Table leaders',
-        className: 'btn_table_leaders',
-        onClick: () => {
-            document.body.classList.add('modal-open');
-            modal_leaders.showModal()}
-    })
-);
-
-const main = document.createElement('main');
-
-const main_wrapper = document.createElement('div');
-
-const values_wrapper = document.createElement('div');
-values_wrapper.className = 'values';
-
-const movesEl = document.createElement('span');
-movesEl.className = 'moves';
-
-const pairsEl = document.createElement('span');
-pairsEl.className = 'pairs';
-
-values_wrapper.append(movesEl, pairsEl);
-
 const images = [
     'images/1.jpg',
     'images/2.jpg',
@@ -98,6 +20,208 @@ const images = [
 ];
 
 const deck = [...images, ...images];
+
+const state = {
+    firstCard: null,
+    secondCard: null,
+    lockBoard: false,
+    moves: 0,
+    matchedPairs: 0,
+    totalPairs: 8
+};
+
+const STORAGE_KEY = 'memoryGame:leaders';
+const MAX_RESULTS = 10;
+
+function loadResults() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+
+        return parsed.filter (
+            (r) => r && typeof r.moves === 'number' && typeof r.date === 'number'
+        );
+    } catch (e) {
+        console.warn(e);
+        return [];
+    }
+}
+
+function saveResults (results) {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+    } catch (e) {
+        console.warn(e);
+    }
+}
+
+function sortResults(results) {
+  return results.slice().sort((a, b) => {
+    if (a.moves !== b.moves) return a.moves - b.moves;
+    return a.date - b.date;
+  });
+}
+
+function trimResults(results) {
+  return sortResults(results).slice(0, MAX_RESULTS);
+}
+
+function addResult(moves) {
+  const results = loadResults();
+  results.push({ moves, date: Date.now() });
+  saveResults(trimResults(results));
+}
+
+function formatDate(timestamp) {
+  const d = new Date(timestamp);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
+const header = document.createElement('header');
+
+const label_box = document.createElement('div');
+label_box.className = label_box
+
+const label = document.createElement('p');
+label.className = 'label';
+label.textContent = 'Memory Game';
+
+label_box.append(label);
+
+const header_buttons = document.createElement('div');
+header_buttons.className = 'header_buttons';
+
+header_buttons.append(
+    createButton({
+        text: 'New game',
+        className: 'btn',
+        onClick: newGame
+    }),
+    createButton({
+        text: 'Table leaders',
+            className: 'btn',
+            onClick: () => {
+                document.body.classList.add('modal-open');
+                renderLeaders();   
+                modal_leaders.showModal()}
+    })
+)
+function createButton ({text, className, onClick}) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = className;
+    btn.textContent = text;
+    btn.addEventListener('click', onClick);
+    return btn;
+}
+
+function renderLeaders () {
+    leadersBody.replaceChildren();
+
+    const results = trimResults(loadResults());
+
+    if (results.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'leaders_empty';
+        empty.textContent = 'No results';
+        leadersBody.append(empty);
+        return;
+    }
+
+    const table = document.createElement('table');
+    table.className = 'leaders_table'
+
+    const thead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    ['number', 'Moves', 'Date'].forEach((text) => {
+        const th = document.createElement('th');
+        th.textContent = text;
+        headRow.append(th);
+    });
+    thead.append(headRow);
+
+    const tbody = document.createElement('tbody');
+    results.forEach((result, index) => {
+        const tr = document.createElement('tr');
+
+        const number = document.createElement('td');
+        number.textContent = index + 1;
+
+        const moves = document.createElement('td');
+        moves.textContent = result.moves;
+
+        const date = document.createElement('td');
+        date.textContent = formatDate(result.date);
+
+        tr.append(number, moves, date);
+        tbody.append(tr);
+    });
+
+    table.append(thead, tbody);
+    leadersBody.append(table);
+}
+
+const modal_leaders = document.createElement('dialog');
+modal_leaders.className = 'modal';
+modal_leaders.addEventListener('close', () => {
+  document.body.classList.remove('modal-open');
+});
+modal_leaders.addEventListener('click', (e) => {
+  const rect = modal_leaders.getBoundingClientRect();
+  const isInDialog =
+    e.clientX >= rect.left &&
+    e.clientX <= rect.right &&
+    e.clientY >= rect.top &&
+    e.clientY <= rect.bottom;
+
+  if (!isInDialog) {
+    modal_leaders.close();
+  }
+});
+
+const modal_title = document.createElement('h2');
+modal_title.textContent = 'List of best results';
+
+const leadersBody = document.createElement('div');
+leadersBody.className = 'leaders_body';
+
+const close_modal_btn = document.createElement('button');
+close_modal_btn.className = 'btn';
+close_modal_btn.type = 'button';
+close_modal_btn.textContent = 'Close';
+close_modal_btn.addEventListener ('click', () => {
+    if (modal_leaders.open) modal_leaders.close()})
+
+modal_leaders.append(modal_title, leadersBody, close_modal_btn);
+
+header.append (
+    label_box,
+    modal_leaders,
+    header_buttons
+);
+
+const main = document.createElement('main');
+
+const main_wrapper = document.createElement('div');
+main_wrapper.className = 'main_wrapper';
+
+const values_wrapper = document.createElement('div');
+values_wrapper.className = 'values';
+
+const movesEl = document.createElement('span');
+movesEl.className = 'moves';
+
+const pairsEl = document.createElement('span');
+pairsEl.className = 'pairs';
+
+values_wrapper.append(movesEl, pairsEl);
+
+
 
 function shuffle(array) {
     const result = array.slice();
@@ -128,6 +252,7 @@ function createCard(src) {
     front.className = 'card_front';
 
     const img = document.createElement('img');
+    img.className = 'img';
     img.src = src;
     img.alt = '';
     img.width = 100;
@@ -192,8 +317,8 @@ function updateStats() {
 
 function checkWin () {
     if (state.matchedPairs === state.totalPairs) {
+        addResult(state.moves);
         setTimeout(() => {
-            const msg = `Win! Moves: ${state.moves}`;
             showWinModal(state.moves);
         }, 400);
     }
@@ -202,6 +327,18 @@ function checkWin () {
 function showWinModal (moves) {
     const dialog = document.createElement('dialog');
     dialog.className = 'modal';
+    dialog.addEventListener('click', (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const isInDialog =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+    if (!isInDialog) {
+        dialog.close();
+    }
+});
 
     const h = document.createElement('h2');
     h.textContent = 'Win!';
@@ -210,7 +347,7 @@ function showWinModal (moves) {
     p.textContent = `You did it in ${moves} moves.`;
 
     const btn = document.createElement('button');
-    btn.type = 'button';
+    btn.type = 'btn';
     btn.textContent = 'New game';
     btn.addEventListener('click', () => {
         dialog.close();
@@ -225,6 +362,7 @@ function showWinModal (moves) {
 }
 
 function newGame() {
+  resultSaved = false;
   state.firstCard = null;
   state.secondCard = null;
   state.lockBoard = false;
