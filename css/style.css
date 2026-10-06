@@ -173,7 +173,8 @@ dialog.modal {
     border: none;
     padding: 20px;
     margin: auto;
-    width: min(90vw, 360px);
+    width: min(90vw);
+    max-width: 500px;
     background: #F5E6D3;
     border: 2px solid #A09D9e;
     border-radius: 12px;
